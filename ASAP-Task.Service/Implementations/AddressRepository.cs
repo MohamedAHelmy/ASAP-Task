@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ASAP_Task.Service.Implementations
 {
-    internal class AddressRepository : IAddressRepository
+    public class AddressRepository : IAddressRepository
     {
         private readonly DataContext _context;
 
