@@ -44,7 +44,7 @@ namespace ASAP_Task.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ASAP_Task.Core.Person", b =>
@@ -64,7 +64,7 @@ namespace ASAP_Task.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("People", (string)null);
+                    b.ToTable("People");
                 });
 
             modelBuilder.Entity("ASAP_Task.Core.User", b =>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASAP_Task.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230711092151_V1.0.0.0")]
-    partial class V1000
+    [Migration("20230711113620_CreateDatabase")]
+    partial class CreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -40,16 +40,16 @@ namespace ASAP_Task.Service.Implementations
         {
             if (model != null)
             {
-                var existUser = await _userManager.FindByEmailAsync(model.Email);
+                var existUser = await _userManager.FindByNameAsync(model.UserName);
                 if (existUser == null)
                 {
 
                     return "Email or Password is Invalid";
                 }
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, true);
+                var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, true, true);
                 if (result.Succeeded)
                 {
-                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    var user = await _userManager.FindByNameAsync(model.UserName);
 
                     var claims = new List<Claim>
                     {
@@ -128,7 +128,7 @@ namespace ASAP_Task.Service.Implementations
             }
             var AppUser = new User
             {
-                UserName = user.Email,
+                UserName = user.UserName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Name = user.Name,
