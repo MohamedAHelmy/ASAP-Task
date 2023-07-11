@@ -22,8 +22,7 @@ namespace ASAP_Task.Controllers
         }
 
         [Authorize]
-        [HttpGet]
-        [HttpPost("GetAllAddresses")]
+        [HttpGet("GetAllAddresses")]
         public async Task<IActionResult> GetAllAddresses()
         {
             var addresses = await _addressService.GetAllAddresses();
