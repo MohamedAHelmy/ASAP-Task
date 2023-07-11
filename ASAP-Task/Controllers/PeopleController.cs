@@ -1,11 +1,13 @@
 ﻿using ASAP_Task.Core;
 using ASAP_Task.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASAP_Task.Controllers
 {
     [ApiController]
-    [Route("api/people")]
+    [Route("api/[controller]")]
     public class PersonController : ControllerBase
     {
         private readonly IPersonService _personService;
@@ -15,14 +17,16 @@ namespace ASAP_Task.Controllers
             _personService = personService;
         }
 
-        [HttpGet]
+        [Authorize]
+        [HttpGet("GetAllPeople")]
         public async Task<IActionResult> GetAllPeople()
         {
             var people = await _personService.GetAllPeople();
             return Ok(people);
         }
 
-        [HttpGet("{id}")]
+        [Authorize]
+        [HttpGet("GetPerson/{id}")]
         public async Task<IActionResult> GetPersonById(int id)
         {
             var person = await _personService.GetPersonById(id);
@@ -33,7 +37,8 @@ namespace ASAP_Task.Controllers
             return Ok(person);
         }
 
-        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("AddPerson")]
         public async Task<IActionResult> AddPerson([FromBody] Person person)
         {
             if (!ModelState.IsValid)
@@ -45,7 +50,8 @@ namespace ASAP_Task.Controllers
             return CreatedAtAction(nameof(GetPersonById), new { id = person.Id }, person);
         }
 
-        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        [HttpPut("UpdatePerson/{id}")]
         public async Task<IActionResult> UpdatePerson(int id, [FromBody] Person person)
         {
             if (id != person.Id)
@@ -56,13 +62,15 @@ namespace ASAP_Task.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("DeletePerson/{id}")]
         public async Task<IActionResult> DeletePerson(int id)
         {
             await _personService.DeletePerson(id);
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("filter")]
         public async Task<IActionResult> FilterPeople(string name, int age)
         {

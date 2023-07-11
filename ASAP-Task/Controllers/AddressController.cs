@@ -4,11 +4,14 @@ using ASAP_Task.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;
 using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace ASAP_Task.Controllers
 {
     [ApiController]
-    [Route("api/addresses")]
+    [Route("api/[controller]")]
     public class AddressController : ControllerBase
     {
         private readonly IAddressService _addressService;
@@ -18,14 +21,16 @@ namespace ASAP_Task.Controllers
             _addressService = addressService;
         }
 
+        [Authorize]
         [HttpGet]
+        [HttpPost("GetAllAddresses")]
         public async Task<IActionResult> GetAllAddresses()
         {
             var addresses = await _addressService.GetAllAddresses();
             return Ok(addresses);
         }
-
-        [HttpGet("{id}")]
+        [Authorize]
+        [HttpGet("GetAddress/{id}")]
         public async Task<IActionResult> GetAddressById(int id)
         {
             var address = await _addressService.GetAddressById(id);
@@ -36,7 +41,8 @@ namespace ASAP_Task.Controllers
             return Ok(address);
         }
 
-        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("AddAddress")]
         public async Task<IActionResult> AddAddress([FromBody] Address address)
         {
             if (!ModelState.IsValid)
@@ -48,7 +54,8 @@ namespace ASAP_Task.Controllers
             return CreatedAtAction(nameof(GetAddressById), new { id = address.Id }, address);
         }
 
-        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        [HttpPut("UpdateAddress/{id}")]
         public async Task<IActionResult> UpdateAddress(int id, [FromBody] Address address)
         {
             if (id != address.Id)
@@ -59,13 +66,15 @@ namespace ASAP_Task.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("DeleteAddress/{id}")]
         public async Task<IActionResult> DeleteAddress(int id)
         {
             await _addressService.DeleteAddress(id);
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("filter")]
         public async Task<IActionResult> FilterAddresses(string Street, string City, string Country)
         {
